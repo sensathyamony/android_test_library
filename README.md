@@ -1,45 +1,143 @@
-**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
+## Getting Start
+First you need to include this into your project
+### Gradle
+```groovy
+dependencies {
+    implementation 'com.github.sensathyamony:android_test_library:{latest_version}'
+}
+```
 
-When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
+## Here are some usable Class
 
-*We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket.*
+#### 1. PickHelper Usage
+``` java
+// This using for pick media. It can be pick one or many
+PickHelper.filePicker(MainActivity.this, CALLBACK);
 
----
+// return value
+@Override
+protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == CALLBACK){
+        //do something
+    }
+}
+/* 
+    This using for share media. You share the multiple file by using this
+    fileList = ArrayList<Uri>();     
+ */
+PickHelper.shareFile(MainActivity.this, ArrayList<Uri>);
+```
 
-## Edit a file
+#### 2. FunctionHelper Usage
+``` java
+// This using for pick media. It can be pick one or many
+1. FunctionHelper.requestPermission(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, CALLBACK);
 
-You’ll start by editing this README file to learn how to edit a file in Bitbucket.
+//Return Value
+@Override
+public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    if (requestCode == CALLBACK){}
+}
+/*
+    This function use to check if the permission is allow or not. 
+    This function return Boolean.
+*/
+2. FunctionHelper.isPermissionAllowed(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE})) 
 
-1. Click **Source** on the left side.
-2. Click the README.md link from the list of files.
-3. Click the **Edit** button.
-4. Delete the following text: *Delete this line to make a change to the README from Bitbucket.*
-5. After making your change, click **Commit** and then **Commit** again in the dialog. The commit page will open and you’ll see the change you just made.
-6. Go back to the **Source** page.
+/*
+    This function is customer color snackbarPopup. This function use 4 method
+    snackBarPopUp(@NonNull View view, String textMsg, int colorRes, int textColor)
+*/
+3. FunctionHelper.snackBarPopUp(view, "Permission Granted", R.color.purple_700, R.color.red);
 
----
+/*
+    writeFileLog(Context context, String filename, String ext, String value)
+    This function is use to create local file log inside your application directory.
+*/
+4. FunctionHelper.writeFileLog(MainActivity.this, "testFile", "log", "Hello world");
 
-## Create a file
+/*
+    getFile(Context context, String filename)
+    This function is use to get your application file in return.
+*/
+5. FunctionHelper.getFile(MainActivity.this, "fileNameWithExtension");
 
-Next, you’ll add a new file to this repository.
+/*
+    htmlToPrint(Context context, String fileName, String value, PrintAttributes.MediaSize pageSize)
+    This function is use to print html string.
+*/
+6. FunctionHelper.htmlToPrint(MainActivity.this, "mainIndex.html",  "<h1>Hello World</h1>", PrintAttributes.MediaSize.ISO_A5);
+```
 
-1. Click the **New file** button at the top of the **Source** page.
-2. Give the file a filename of **contributors.txt**.
-3. Enter your name in the empty file space.
-4. Click **Commit** and then **Commit** again in the dialog.
-5. Go back to the **Source** page.
+#### 3. StringHelper Usage
+``` java
+/*
+    convertStringToCurrency(String currencyCode, double value)
+    This function is use to return value with currency as String
+*/
+1. StringHelper.convertStringToCurrency("KHR", 10000.1);
 
-Before you move on, go ahead and explore the repository. You've already seen the **Source** page, but check out the **Commits**, **Branches**, and **Settings** pages.
+/*
+    convertDateFormat(String value, String mainFormat, String outputFormat, String localize)
+    This function is use convert your date format with localization and return as String
+*/
+2. StringHelper.convertDateFormat("01 Jan 2023 09:09:00", "dd MMM yyyy hh:mm:ss", "MMM dd yyy", en );
 
----
+/*
+    getDate(String format, TimeZone timeZone)
+    This function is use to get current date follow the format and timeZone and return as String
+*/
+3. StringHelper.getDate("01 Jan 2023 09:09:00", TimeZone.getTimeZone("Asia/Phnom_Penh"));
+```
 
-## Clone a repository
+#### 4. CallApi Usage
+1. implement this interface into your Activity
+``` java
+public class MainActivity ... implements CallApi.OnApiTaskCallBackResponseArray, CallApi.OnApiTaskCallBackResponseObject {
+}
+```
 
-Use these steps to clone from SourceTree, our client for using the repository command-line free. Cloning allows you to work on your files locally. If you don't yet have SourceTree, [download and install first](https://www.sourcetreeapp.com/). If you prefer to clone from the command line, see [Clone a repository](https://confluence.atlassian.com/x/4whODQ).
+2. Declare it into onCreate()
+``` java
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        CallApi callApi = new CallApi();
+        callApi.setCallBackListerArray(this); //this is used for responseArray
+        callApi.setCallBackListerObject(this); //this is used for responseObject
+    }
+```
+3. Use the function
+``` java
+    /*
+    makeApiRequestObject(Context context, int requestMethod, final int callBackCode, String baseUrl, String url, Map<String, String> param, String token)
+    */
+    //for response as Object
+    CallApi.makeApiRequestObject(MainActivity.this, 1, 99, baseUrl, endPoint, parameter, "" );
+    
+    //for response as Array
+    CallApi.makeArrayRequest(MainActivity.this, 0, 99,baseUrl, endPoint, parameter, "" );
+    
+    // RETURN VALUE
+    @Override
+    public void onApiSuccessCallBack(int callBackCode, String successMsg, JSONArray respondArray) {
+        if (callBackCode == 99) {
+            //Do Something
+        }
+    }
 
-1. You’ll see the clone button under the **Source** heading. Click that button.
-2. Now click **Check out in SourceTree**. You may need to create a SourceTree account or log in.
-3. When you see the **Clone New** dialog in SourceTree, update the destination path and name if you’d like to and then click **Clone**.
-4. Open the directory you just created to see your repository’s files.
+    @Override
+    public void onApiSuccessCallBack(int callBackCode, String successMsg, JSONObject respondObject) {
+        if (callBackCode == 99) {
+            //Do Something
+        }
+    }
 
-Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+    @Override
+    public void onApiErrorCallBack(int callBackCode, String errorMsg, int status) {
+        if (callBackCode == 99) {
+            //Do Something
+        }
+    }
+```

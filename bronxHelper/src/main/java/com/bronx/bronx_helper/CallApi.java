@@ -40,7 +40,7 @@ public class CallApi {
                 new JSONObject(param),
                 response -> {
                     Log.e(TAG, "        Success response " + response.toString());
-                    onApiObjectCallback.onApiSuccessCallBack(callBackCode, "success", response);
+                    onApiObjectCallback.onApiSuccessCallBack(callBackCode, response.optString("success"), response);
                 },
                 error -> {
                     Log.e(TAG, "        Error response " + error.getMessage());
